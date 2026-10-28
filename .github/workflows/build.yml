@@ -6,7 +6,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   build:
-    runs-on: macos-latest
+        runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@v4
       - name: Install XcodeGen
