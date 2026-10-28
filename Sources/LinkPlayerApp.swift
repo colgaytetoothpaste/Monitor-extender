@@ -126,6 +126,8 @@ struct PlayerViewController: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> AVPlayerViewController {
         let controller = AVPlayerViewController()
         let player = AVPlayer(url: url)
+        player.allowsExternalPlayback = true
+        player.usesExternalPlaybackWhileExternalScreenIsActive = true
         controller.player = player
         controller.videoGravity = .resizeAspect
         controller.entersFullScreenWhenPlaybackBegins = true
@@ -150,7 +152,7 @@ final class WebController: ObservableObject {
         // false = on iPhone, any <video> that starts playing opens in native full screen
         config.allowsInlineMediaPlayback = false
         config.mediaTypesRequiringUserActionForPlayback = []
-        config.allowsPictureInPictureMediaPlayback = true
+        config.allowsAirPlayForMediaPlayback = true
         config.defaultWebpagePreferences.allowsContentJavaScript = true
 
         // Runs in every frame (including embedded iframes) so it finds videos anywhere
