@@ -1,19 +1,15 @@
 name: Build IPA
 on:
   workflow_dispatch:
-concurrency:
-  group: build
-  cancel-in-progress: true
 jobs:
   build:
-        runs-on: macos-15-intel
+    runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@v4
       - name: Install XcodeGen
         env:
           HOMEBREW_NO_AUTO_UPDATE: 1
           HOMEBREW_NO_INSTALL_CLEANUP: 1
-          HOMEBREW_NO_ENV_HINTS: 1
         run: brew install xcodegen
       - name: Generate Xcode project
         run: xcodegen generate
@@ -32,4 +28,3 @@ jobs:
         with:
           name: LinkPlayer-ipa
           path: LinkPlayer.ipa
-          compression-level: 0
