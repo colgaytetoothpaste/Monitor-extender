@@ -1,2 +1,2 @@
 # Monitor-extender
-Extend your iDevice's screen when watching movies when connected to a External screen
+Watch your videos on a full screen when connected to a wired monitor from your iPhone!
