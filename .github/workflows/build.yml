@@ -1,27 +1,35 @@
 name: Build IPA
 on:
-  push:
   workflow_dispatch:
+concurrency:
+  group: build
+  cancel-in-progress: true
 jobs:
   build:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - name: Install XcodeGen
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: 1
+          HOMEBREW_NO_INSTALL_CLEANUP: 1
+          HOMEBREW_NO_ENV_HINTS: 1
         run: brew install xcodegen
       - name: Generate Xcode project
         run: xcodegen generate
       - name: Build (unsigned)
         run: |
           xcodebuild -project LinkPlayer.xcodeproj -scheme LinkPlayer \
-            -configuration Release -sdk iphoneos -derivedDataPath build \
+            -configuration Debug -sdk iphoneos -derivedDataPath build \
+            ARCHS=arm64 ONLY_ACTIVE_ARCH=YES DEBUG_INFORMATION_FORMAT=dwarf \
             CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" build
       - name: Package IPA
         run: |
           mkdir Payload
-          cp -R build/Build/Products/Release-iphoneos/LinkPlayer.app Payload/
-          zip -r LinkPlayer.ipa Payload
+          cp -R build/Build/Products/Debug-iphoneos/LinkPlayer.app Payload/
+          zip -qr LinkPlayer.ipa Payload
       - uses: actions/upload-artifact@v4
         with:
           name: LinkPlayer-ipa
           path: LinkPlayer.ipa
+          compression-level: 0
